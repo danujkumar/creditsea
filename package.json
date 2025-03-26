@@ -11,9 +11,11 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@mui/icons-material": "^7.0.0",
     "@mui/material": "^7.0.0",
     "@toolpad/core": "^0.13.0",
+    "fortawesome": "^0.0.1-security",
     "next": "15.2.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
