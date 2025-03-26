@@ -33,7 +33,7 @@ const applyLoan = async (
   email: string
 ) => {
   try {
-    const response = await fetch("http://localhost:3000/apply", {
+    const response = await fetch("https://loan-service-ivxx.onrender.com/apply", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
