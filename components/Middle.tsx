@@ -9,6 +9,23 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { Avatar, Chip, IconButton, SvgIcon } from "@mui/material";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import PeopleIcon from '@mui/icons-material/People';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import SavingsIcon from '@mui/icons-material/Savings';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+
+const dashboardStats = [
+  { title: "Loans", value: "50", icon: <MonetizationOnIcon style={{ fontSize: 40, color: "white" }} /> },
+  { title: "Borrowers", value: "100", icon: <PeopleIcon style={{ fontSize: 40, color: "white" }} /> },
+  { title: "Cash Disbursed", value: "550,000", icon: <AttachMoneyIcon style={{ fontSize: 40, color: "white" }} /> },
+  { title: "Savings", value: "450,000", icon: <SavingsIcon style={{ fontSize: 40, color: "white" }} /> },
+  { title: "Repaid Loans", value: "30", icon: <CheckCircleIcon style={{ fontSize: 40, color: "white" }} /> },
+  { title: "Cash Received", value: "1,000,000", icon: <CurrencyExchangeIcon style={{ fontSize: 40, color: "white" }} /> }
+];
+
 
 const API_URL = "https://loan-service-ivxx.onrender.com/getAll";
 
@@ -63,8 +80,24 @@ export default function StickyHeadTable() {
     setPage(0);
   };
 
+
+
   return (
-    <Paper sx={{ width: "80%", overflow: "hidden", color:'#252733', margin:"10px", border:"1px solid gray" }}>
+    <div style={{display:"flex", flexDirection:"column", width:"79%"}}>
+    <Paper sx={{ width: "100%", overflow: "hidden", color:'#252733', margin:"10px", border:"1px solid gray", display:"flex", flexWrap:"wrap", justifyContent:"center" }}>
+    {dashboardStats.map((item, index) => (
+        <div key={index} style={{ display: "flex", alignItems: "center", background: "white", borderRadius: "5px", boxShadow: "2px 2px 10px rgba(0,0,0,0.1)", width:"350px", margin:"20px" }}>
+          <div style={{ background: "#0A512F", width: "80px", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            {item.icon}
+          </div>
+          <div style={{ padding: "15px", flexGrow: 1 }}>
+            <p style={{ fontSize: "20px", fontWeight: "bold", margin: "5px 0" }}>{item.value}</p>
+            <p style={{ fontSize: "14px", color: "#555", margin: "5px 0" }}>{item.title.toUpperCase()}</p>
+          </div>
+        </div>
+      ))}
+    </Paper>
+    <Paper sx={{ width: "100%", overflow: "hidden", color:'#252733', margin:"10px", border:"1px solid gray" }}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -87,15 +120,11 @@ export default function StickyHeadTable() {
                       <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                         {column.id === "fullname" && (
                           <Avatar style={{ marginRight: "20px" }}
-                            // @ts-ignore
-                           alt={row.fullname} src="https://mui.com/static/images/avatar/1.jpg" />
+                          // @ts-ignore
+                          alt={row.fullname} src="https://mui.com/static/images/avatar/1.jpg" />
                         )}
                         {column.id === "actions" && (
-                          <IconButton aria-label="Example">
-                            <SvgIcon>
-                              <path d="M8 12L16 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </SvgIcon>
-                          </IconButton>
+                          <MoreVertIcon style={{cursor:"pointer"}}/>
                         )}
                         {
                           column.id === "employment_status" && (
@@ -122,5 +151,6 @@ export default function StickyHeadTable() {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
     </Paper>
+    </div>
   );
 }
