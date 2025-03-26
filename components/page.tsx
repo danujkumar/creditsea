@@ -1,19 +1,21 @@
 'use client'
 import { Button, OutlinedInput, Radio, TextField } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 
-const InputField = ({ label }: { label: string }) => {
+const InputField = ({ label, value, onChange }: { label: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) => {
   return (
     <TextField
       id="outlined-basic"
       label={label}
       variant="outlined"
+      value={value}
+      onChange={onChange}
       sx={{
         width: '300px',
         '& .MuiOutlinedInput-root': {
-          height: '50px', // Adjust this value to your desired height
+          height: '50px',
           '& input': {
-            padding: '10px 14px', // Adjust padding if needed
+            padding: '10px 14px',
           },
         },
       }}
@@ -21,8 +23,60 @@ const InputField = ({ label }: { label: string }) => {
   )
 }
 
+const applyLoan = async (
+  fullname: string,
+  loan_amount: number,
+  tenure: number,
+  employment_status: string,
+  reason: string,
+  address: string,
+  email: string
+) => {
+  try {
+    const response = await fetch("http://localhost:3000/apply", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fullname,
+        loan_amount,
+        tenure,
+        employment_status,
+        reason,
+        address,
+        email,
+        allowed: true, // Assuming these are fixed
+        repaid: false
+      }),
+    });
+
+    const data = response.status;
+    console.log(data)
+
+    if (response.ok) {
+      console.log("Loan applied successfully:", data);
+      window.alert("Loan applied successfully");
+      return data;
+    } else {
+      console.error("Error applying for loan:", data, fullname, loan_amount, tenure, employment_status, reason, address, email);
+      return null;
+    }
+  } catch (error) {
+    console.error("Network error:", error);
+    return null;
+  }
+};
+
 export default function Home() {
-  const [selectedValue, setSelectedValue] = React.useState('a')
+  const [fullname, setFullname] = useState('');
+  const [loanAmount, setLoanAmount] = useState('');
+  const [tenure, setTenure] = useState('');
+  const [employmentStatus, setEmploymentStatus] = useState('');
+  const [reason, setReason] = useState('');
+  const [address, setAddress] = useState('');
+  const [email, setEmail] = useState('');
+  const [selectedValue, setSelectedValue] = useState('a');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedValue(event.target.value)
@@ -37,6 +91,8 @@ export default function Home() {
           width: '80vw',
           display: 'flex',
           justifyContent: 'center',
+          position: "absolute",
+          zIndex: 10,
           alignItems: 'center',
         }}
       >
@@ -86,14 +142,14 @@ export default function Home() {
                 <div style={{ marginBottom: '0.4rem' }}>
                   Full name as it appears on bank account
                 </div>
-                <InputField label="Full name as it appears on bank account" />
+                <InputField onChange={(e) => setFullname(e.target.value)} value={fullname} label="Full name as it appears on bank account" />
               </div>
 
               <div>
                 <div style={{ marginBottom: '0.4rem' }}>
                   Loan tenure (in months)
                 </div>
-                <InputField label="Loan tenure (in months)" />
+                <InputField onChange={(e) => setTenure(e.target.value)} value={tenure} label="Loan tenure (in months)" />
               </div>
 
               {/* <div>
@@ -111,6 +167,8 @@ export default function Home() {
               <div>
                 <div style={{ marginBottom: '0.4rem' }}>Reason for loan</div>
                 <OutlinedInput
+                  onChange={(e) => setReason(e.target.value)}
+                  value={reason}
                   placeholder="Reason for loan"
                   sx={{ width: '300px', height: '200px' }}
                 />
@@ -130,22 +188,22 @@ export default function Home() {
                 <div style={{ marginBottom: '0.4rem' }}>
                   How much do you need?
                 </div>
-                <InputField label="How much do you need?" />
+                <InputField onChange={(e) => setLoanAmount(e.target.value)} value={loanAmount} label="How much do you need?" />
               </div>
 
               <div>
                 <div style={{ marginBottom: '0.4rem' }}>Employment status</div>
-                <InputField label="Employment status" />
+                <InputField onChange={(e) => setEmploymentStatus(e.target.value)} value={employmentStatus} label="Employment status" />
               </div>
 
               <div>
                 <div style={{ marginBottom: '0.4rem' }}>Employment address</div>
-                <InputField label="Employment address" />
+                <InputField onChange={(e)=>setAddress(e.target.value)} value={address} label="Employment address" />
               </div>
 
               <div>
-                <div style={{ marginBottom: '0.4rem' }}>Employment address</div>
-                <InputField label="Employment address" />
+                <div style={{ marginBottom: '0.4rem' }}>Email Id</div>
+                <InputField onChange={(e)=>setEmail(e.target.value)} value={email} label="Email Id" />
               </div>
             </div>
           </div>
@@ -183,7 +241,7 @@ export default function Home() {
               reporting agencies.
             </div>
           </div>
-          <Button variant="contained" style={{ width: '15%', height: '8%' }}>
+          <Button variant="contained" onClick={()=>{applyLoan(fullname, Number.parseFloat(loanAmount), Number.parseInt(tenure), employmentStatus, reason, address, email);}} style={{ width: '15%', height: '8%' }}>
             Submit
           </Button>
         </div>
