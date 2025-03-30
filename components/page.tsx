@@ -1,5 +1,16 @@
 "use client";
-import { Button, Checkbox, OutlinedInput, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  SelectChangeEvent,
+  TextField,
+} from "@mui/material";
 import React, { useState } from "react";
 
 interface InputFieldProps {
@@ -16,7 +27,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, value, onChange }) => {
       value={value}
       onChange={onChange}
       className="w-full sm:w-60 h-10 gap-3"
-      sx={{ display: 'flex', margin: "5px" }}
+      sx={{ display: "flex", margin: "5px" }}
     />
   );
 };
@@ -29,7 +40,7 @@ const applyLoan = async (
   reason: string,
   address: string,
   email: string,
-  allowed: boolean,
+  allowed: boolean
 ): Promise<boolean | null> => {
   try {
     const response = await fetch(
@@ -64,16 +75,22 @@ const applyLoan = async (
   }
 };
 
-export default function Home({ close }: Readonly<{ close: (isClose: boolean) => void }>) {
+export default function Home({
+  close,
+}: Readonly<{ close: (isClose: boolean) => void }>) {
   const [fullname, setFullname] = useState<string>("");
   const [loanAmount, setLoanAmount] = useState<string>("");
   const [tenure, setTenure] = useState<string>("");
-  const [employmentStatus, setEmploymentStatus] = useState<string>("");
   const [reason, setReason] = useState<string>("");
   const [address, setAddress] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [terms, setTerms] = useState<boolean>(false);
   const [allowed, setAllowed] = useState<boolean>(false);
+  const [employmentStatus, setEmploymentStatus] = React.useState("");
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setEmploymentStatus(event.target.value);
+  };
 
   return (
     <div className="w-full h-3/4 mt-8 flex items-center justify-center fixed top-20  left-0 z-50 bg-opacity-50 ">
@@ -96,11 +113,23 @@ export default function Home({ close }: Readonly<{ close: (isClose: boolean) => 
             value={loanAmount}
             onChange={(e) => setLoanAmount(e.target.value)}
           />
-          <InputField
-            label="Employment status fill only these terms (employed/self-employed/unemployed) case-sensitive"
-            value={employmentStatus}
-            onChange={(e) => setEmploymentStatus(e.target.value)}
-          />
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Employment Status</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                className="w-full sm:w-60 h-15"
+                value={employmentStatus}
+                label="Employment Status"
+                onChange={handleChange}
+              >
+                <MenuItem value={"employed"}>Employed</MenuItem>
+                <MenuItem value={"self-employed"}>Self Employed</MenuItem>
+                <MenuItem value={"unemployed"}>Unemployed</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
           <InputField
             label="Employment address"
             value={address}
@@ -123,7 +152,9 @@ export default function Home({ close }: Readonly<{ close: (isClose: boolean) => 
           <label className="flex items-center">
             <Checkbox
               checked={terms}
-              onChange={()=>{setTerms(!terms)}}
+              onChange={() => {
+                setTerms(!terms);
+              }}
             />
             I accept the terms
           </label>
@@ -131,7 +162,9 @@ export default function Home({ close }: Readonly<{ close: (isClose: boolean) => 
           <label className="flex items-center">
             <Checkbox
               checked={allowed}
-              onChange={()=>{setAllowed(!allowed)}}
+              onChange={() => {
+                setAllowed(!allowed);
+              }}
             />
             My information may be shared with credit bureaus
           </label>
@@ -142,6 +175,7 @@ export default function Home({ close }: Readonly<{ close: (isClose: boolean) => 
             variant="contained"
             className="w-full sm:w-36 h-10"
             onClick={async () => {
+              console.log(employmentStatus)
               if (!terms) {
                 window.alert("Please accept the terms");
                 return;
