@@ -15,7 +15,8 @@ const InputField: React.FC<InputFieldProps> = ({ label, value, onChange }) => {
       variant="outlined"
       value={value}
       onChange={onChange}
-      className="w-full sm:w-60 h-10"
+      className="w-full sm:w-60 h-10 gap-3"
+      sx={{ display: 'flex', margin: "5px" }}
     />
   );
 };
@@ -96,7 +97,7 @@ export default function Home({ close }: Readonly<{ close: (isClose: boolean) => 
             onChange={(e) => setLoanAmount(e.target.value)}
           />
           <InputField
-            label="Employment status"
+            label="Employment status fill only these terms (employed/self-employed/unemployed) case-sensitive"
             value={employmentStatus}
             onChange={(e) => setEmploymentStatus(e.target.value)}
           />
@@ -118,7 +119,7 @@ export default function Home({ close }: Readonly<{ close: (isClose: boolean) => 
           />
         </div>
 
-        <div className="flex flex-col md:flex-row gap-2 w-full mt-14">
+        <div className="flex flex-col md:flex-row gap-2 w-full max-lg:mt-30 md:mt-3.5">
           <label className="flex items-center">
             <Checkbox
               checked={terms}
